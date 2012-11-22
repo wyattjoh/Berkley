@@ -1,5 +1,5 @@
 CC=g++ -Wall -O3
-FLAGS=-ldb_cxx -lm
+FLAGS=-ldb -lm
 DBLIBS=-L/usr/local/BerkeleyDB.5.3/lib -I /usr/local/BerkeleyDB.5.3/include/ 
 BUILD_DIR=../build
 CLASS_DIR=$(BUILD_DIR)/class
