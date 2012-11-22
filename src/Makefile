@@ -4,9 +4,9 @@ DBLIBS=-L/usr/local/BerkeleyDB.5.3/lib -I /usr/local/BerkeleyDB.5.3/include/
 BUILD_DIR=../build
 CLASS_DIR=$(BUILD_DIR)/class
 
-all: | folders ../build/app.o
+all: | $(CLASS_DIR) ../build/app.o
 
-folders: $(CLASS_DIR)
+$(CLASS_DIR):
 	mkdir -p $(CLASS_DIR)/
 
 ../build/app.o: $(CLASS_DIR)/Berkley.o $(CLASS_DIR)/Songs.o app.cpp
