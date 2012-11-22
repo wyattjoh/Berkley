@@ -41,6 +41,9 @@ int main()
 		sprintf(index, "%d", rSong->id);
 		
 		myDB.put(index, (*record).toChar());
+		
+		delete record;
+		delete rSong;
 	}
 	
 	
