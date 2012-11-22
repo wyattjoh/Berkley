@@ -2,6 +2,7 @@
 #define _SONG_H_
 
 #include <string.h>
+#include <stdint.h>
 
 struct rating {
 	std::string User;
