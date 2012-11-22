@@ -14,10 +14,11 @@ public:
 	static bool put(char *myKey, char *myData);
 	static bool get(char *searchKey);
 	static std::string getData();
-	Berkley();
+	Berkley(const char* dbName);
 	~Berkley();
 private:
 	static void flush();
+	static void flush(char *myKey);
 	static void flush(char *myKey, char *myData);
 	static DB *db;
 	static DBT key, data;

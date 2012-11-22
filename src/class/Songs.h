@@ -11,9 +11,10 @@
 
 class Songs {
 public:
-	std::string * toString();
+	std::string *toString();
 	song * toStruct();
 	char * toChar();
+	int charSize();
 	void setData(std::string *dataInput);
 private:
 	song data;

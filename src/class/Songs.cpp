@@ -22,6 +22,10 @@ char * Songs::toChar()
 	
 	return s;
 }
+int Songs::charSize()
+{
+	return dataString.size();
+}
 
 void Songs::setData(std::string *dataInput)
 {
@@ -45,20 +49,25 @@ void Songs::setData(std::string *dataInput)
 	int i;
 		
 	std::string subSubString;
-		
+	std::string token;
+	
+	data.rCount = 0;
+	
 	for(i = 0; substring.size() > 0; i++)
 	{
-		data.rat[i] = getChild(&substring);
+		subSubString = getChild(&substring);
 			
-		subSubString = getCSV(&data.rat[i]);
+		token = getCSV(&subSubString);
 			
-		data.ratings[i].User = subSubString;
+		data.ratings[i].User = token;
 			
-		subSubString = getCSV(&data.rat[i]);
+		token = getCSV(&subSubString);
 			
-		std::istringstream r(subSubString);
+		std::istringstream r(token);
 			
 		r >> data.ratings[i].rating;
+		
+		data.rCount++;
 	}
 }
 

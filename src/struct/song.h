@@ -14,7 +14,7 @@ struct song {
 	std::string Title;
 	std::string Artists;
 	rating ratings[255];
-	std::string rat[255];
+	int rCount;
 };
 
 #endif

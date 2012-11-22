@@ -21,14 +21,21 @@
 
 int main() 
 {	
-	Berkley myDB;
+	Berkley myDB("../data/A4Database.db");
 	
 	std::ifstream file("../data/A4TestData.txt");
 	
 	std::string line;
 	
+	std::cout << "Processing input text file...";
+	
+	//int count = 0;
+	
+	//while(getline(file, line) && count <= 30)
 	while(getline(file, line))
 	{
+		//count++;
+		
 		//std::cout << "Line(" << line << ")" << std::endl;
 		
 		Songs *record = new Songs();
@@ -40,38 +47,56 @@ int main()
 		
 		sprintf(index, "%d", rSong->id);
 		
-		myDB.put(index, (*record).toChar());
+		int charSize = (*record).charSize();
 		
+		std::string * songString = (*record).toString();
+		
+		char * s = new char[charSize + 1];
+		
+		std::copy(songString->begin(), songString->end(), s);
+		s[songString->size()] = '\0';
+		
+		//strcpy(s, (*record).toString()->c_str());
+		
+		myDB.put(index, s);
+		
+		delete [] s;
 		delete record;
-		delete rSong;
 	}
 	
+	std::cout << "done." << std::endl;
 	
 	
 	Songs mySong;
 	int sfRet;
 	char id[10];
-		 		
+	
 	for (;;)
 	{
 		printf("\nEnter ID (0 to exit): "); 
 		sfRet = scanf("%s",id);
-		 	
+		
 		if (id[0]=='0')
-		 break;
-		 			
+			break;
+		
 		if(myDB.get(id))
 		{
 			// std::cout << "Found: " << myDB.getData() << std::endl;
-		 	
+								 	
 			std::string songData = myDB.getData();
-			
+									
 			mySong.setData(&songData);
 			song * mySongStruct = mySong.toStruct();
-					 				
+			
 			std::cout << "--------------------------------" << std::endl;
 			std::cout << "Title: " << mySongStruct->Title << std::endl;
 			std::cout << "Artists: " << mySongStruct->Artists << std::endl;
+			
+			for(int i = 0; i<mySongStruct->rCount; i++)
+			{
+				std::cout << "Rating " << mySongStruct->ratings[i].User << " " << mySongStruct->ratings[i].rating << std::endl;
+			}
+			
 			std::cout << "--------------------------------" << std::endl;
 		}
 		else
@@ -79,7 +104,6 @@ int main()
 			std::cout << "Not Found" << std::endl;
 		}
 	}
-
 	
 	return 0;
 } 

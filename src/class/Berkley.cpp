@@ -8,6 +8,29 @@ DB *Berkley::db;
 DBT Berkley::key, Berkley::data;
 int Berkley::ret;
 
+Berkley::Berkley(const char* dbName)
+{
+	// creates the database object
+	if ((ret = db_create(&db, NULL, 0)) != 0) 
+	{
+		fprintf(stderr, "db_create: %s\n", db_strerror(ret));
+	}
+
+	// opens database
+	ret = db->open(db, NULL, dbName, NULL, DB_HASH, 0, 0664);
+	if (ret != 0)
+	{
+		// If database doesn't exist, create it 
+		ret = db->open(db, NULL, DATABASE, NULL, DB_HASH, DB_CREATE, 0664); 
+	}
+}
+Berkley::~Berkley()
+{
+	ret = db->close(db, 0);
+	if (ret!=0) 
+		db->err(db, ret, "DB->close");
+}
+
 bool Berkley::put(char *myKey, char *myData)
 {
 		
@@ -27,14 +50,14 @@ bool Berkley::put(char *myKey, char *myData)
 	}
 	else
 	{
-		printf("Successfully added (%s,%s).\n",myKey,myData);
+		//printf("Successfully added (%s,%s).\n",myKey,myData);
 		return 1;
 	}
 }
 
 bool Berkley::get(char *searchKey)
 {
-	flush();
+	flush(searchKey);
 	// Search to find the student with this ID			 
 	key.data = searchKey; 
 	key.size = (1+strlen(searchKey))*sizeof(char); 
@@ -72,32 +95,15 @@ std::string Berkley::getData()
 		
 	return s;
 }
-Berkley::Berkley()
-{
-	// creates the database object
-	if ((ret = db_create(&db, NULL, 0)) != 0) 
-	{
-		fprintf(stderr, "db_create: %s\n", db_strerror(ret));
-	}
-
-	// opens database
-	ret = db->open(db, NULL, DATABASE, NULL, DB_HASH, 0, 0664);
-	if (ret != 0)
-	{
-		// If database doesn't exist, create it 
-		ret = db->open(db, NULL, DATABASE, NULL, DB_HASH, DB_CREATE, 0664); 
-	}
-}
-Berkley::~Berkley()
-{
-	ret = db->close(db, 0);
-	if (ret!=0) 
-		db->err(db, ret, "DB->close");
-}
-
 void Berkley::flush()
 {
 	memset(&key, 0, sizeof(key)); 
+	memset(&data, 0, sizeof(data));
+	ret = 0;
+}
+void Berkley::flush(char *myKey)
+{
+	memset(&key, 0, sizeof(*myKey)); 
 	memset(&data, 0, sizeof(data));
 	ret = 0;
 }
