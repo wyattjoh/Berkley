@@ -59,7 +59,9 @@ namespace BerkleyLoader
 			delete [] s;
 			delete record;
 		}
-	
+		
+		file.close();
+		
 		std::cout << "done." << std::endl;
 	}
 }
