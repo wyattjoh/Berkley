@@ -18,5 +18,15 @@ $(CLASS_DIR)/Berkley.o: class/Berkley.cpp
 $(CLASS_DIR)/Songs.o: class/Songs.cpp
 	$(CC) -c class/Songs.cpp -o $(CLASS_DIR)/Songs.o
 
+sync: 
+	rsync -avz . ugl:~/berkley/
+
+mac: clean sync remote-build
+	
+linux: ../build/app.o
+	
+remote-build:
+	ssh ugl 'cd ~/berkley/; make linux;valgrind --tool=memcheck ./../build/app.o 1> /dev/null;'
+
 clean:
 	rm -f ../build/*.o $(CLASS_DIR)/*.o ../data/*.db 
