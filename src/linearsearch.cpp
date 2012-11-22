@@ -16,6 +16,9 @@
 // Include Structs
 #include "struct/song.h"
 
+// Include Loader
+#include "class/Loader.h"
+
 #define STDID_LEN 5
 #define NAME_LEN 50
 
@@ -23,49 +26,8 @@ int main()
 {	
 	Berkley myDB("../data/A4Database.db");
 	
-	std::ifstream file("../data/A4TestData.txt");
-	
-	std::string line;
-	
-	std::cout << "Processing input text file...";
-	
-	//int count = 0;
-	
-	//while(getline(file, line) && count <= 30)
-	while(getline(file, line))
-	{
-		//count++;
-		
-		//std::cout << "Line(" << line << ")" << std::endl;
-		
-		Songs *record = new Songs();
-		(*record).setData(&line);
-		
-		song *rSong = (*record).toStruct();
-		
-		char index[33];
-		
-		sprintf(index, "%d", rSong->id);
-		
-		int charSize = (*record).charSize();
-		
-		std::string * songString = (*record).toString();
-		
-		char * s = new char[charSize + 1];
-		
-		std::copy(songString->begin(), songString->end(), s);
-		s[songString->size()] = '\0';
-		
-		//strcpy(s, (*record).toString()->c_str());
-		
-		myDB.put(index, s);
-		
-		delete [] s;
-		delete record;
-	}
-	
-	std::cout << "done." << std::endl;
-	
+	// Load the contents of the text file into the database
+	BerkleyLoader::loader(&myDB,"../data/A4TestData.txt");
 	
 	Songs mySong;
 	int sfRet;
