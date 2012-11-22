@@ -1,6 +1,7 @@
 #ifndef _BERKLEY_CPP_
 #define _BERKLEY_CPP_
 
+#include <db.h>
 #include "Berkley.h"
 
 DB *Berkley::db;
