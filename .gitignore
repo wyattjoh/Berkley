@@ -1,0 +1,5 @@
+*~
+*.o
+*.db
+build/
+data/A4TestData.txt 
