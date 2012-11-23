@@ -9,14 +9,17 @@ all: | $(CLASS_DIR) ../build/linearsearch.o
 $(CLASS_DIR):
 	mkdir -p $(CLASS_DIR)/
 
-../build/linearsearch.o: $(CLASS_DIR)/Loader.o $(CLASS_DIR)/Berkley.o $(CLASS_DIR)/Songs.o linearsearch.cpp
-	$(CC) $(DBLIBS) $(FLAGS) linearsearch.cpp $(CLASS_DIR)/Loader.o $(CLASS_DIR)/Berkley.o $(CLASS_DIR)/Songs.o -o ../build/linearsearch.o -ldb
+../build/linearsearch.o: $(CLASS_DIR)/Linear.o $(CLASS_DIR)/Loader.o $(CLASS_DIR)/Berkley.o $(CLASS_DIR)/Songs.o linearsearch.cpp
+	$(CC) $(DBLIBS) $(FLAGS) linearsearch.cpp $(CLASS_DIR)/Linear.o $(CLASS_DIR)/Loader.o $(CLASS_DIR)/Berkley.o $(CLASS_DIR)/Songs.o -o ../build/linearsearch.o -ldb
 
 $(CLASS_DIR)/Berkley.o: class/Berkley.cpp
 	$(CC) $(DBLIBS) -c class/Berkley.cpp -o $(CLASS_DIR)/Berkley.o
 	
 $(CLASS_DIR)/Loader.o: class/Loader.cpp
 	$(CC) $(DBLIBS) -c class/Loader.cpp -o $(CLASS_DIR)/Loader.o
+
+$(CLASS_DIR)/Linear.o: class/Linear.cpp
+	$(CC) -I /usr/include -L /usr/lib -c class/Linear.cpp -o $(CLASS_DIR)/Linear.o
 
 $(CLASS_DIR)/Songs.o: class/Songs.cpp
 	$(CC) -c class/Songs.cpp -o $(CLASS_DIR)/Songs.o
