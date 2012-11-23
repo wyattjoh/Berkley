@@ -1,7 +1,7 @@
 #ifndef _LINEAR_H_
 #define _LINEAR_H_
 
-#import "../struct/song.h"
+#include "../struct/song.h"
 
 class Linear
 {

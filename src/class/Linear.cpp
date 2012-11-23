@@ -1,10 +1,9 @@
 #ifndef _LINEAR_CPP_
 #define _LINEAR_CPP_
 
-#import "Linear.h"
-#import <string.h>
-#import <math.h>
-#import "../struct/song.h"
+#include "Linear.h"
+#include <string.h>
+#include <math.h>
 
 Linear::Linear()
 {
