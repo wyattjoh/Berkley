@@ -14,7 +14,8 @@
 #include <math.h>
 
 // Include Classes
-#include "Berkley.h"
+// #include "Berkley.h"
+#include "Berkley_cxx.h"
 #include "Songs.h"
 
 // Include Structs
@@ -109,7 +110,7 @@ int Linear::compare(const void * b, const void * a)
 		return -1;
 }
 
-uint32_t Linear::loader(Berkley *myDB, const char * filename)
+uint32_t Linear::loader(Berkley_cxx *myDB, const char * filename)
 {
 	std::ifstream file(filename);
 	
@@ -144,7 +145,7 @@ uint32_t Linear::loader(Berkley *myDB, const char * filename)
 			
 		// std::cout << index << " <==> " << s << std::endl;
 			
-		myDB->put(index, s);
+		//myDB->put(index, s);
 			
 		count++;
 		

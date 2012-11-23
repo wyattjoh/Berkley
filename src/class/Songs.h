@@ -16,6 +16,7 @@ public:
 	char * toChar();
 	int charSize();
 	void setData(std::string *dataInput);
+	
 private:
 	song data;
 	std::string dataString;
