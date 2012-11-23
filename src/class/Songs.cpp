@@ -41,8 +41,10 @@ void Songs::setData(std::string *dataInput)
 	s >> data.id;
 		
 	data.Title = getParent(dataInput);
+	data.Title.append("\0");
 		
 	data.Artists = getParent(dataInput);
+	data.Artists.append("\0");
 		
 	substring = getParent(dataInput);
 		
@@ -60,6 +62,7 @@ void Songs::setData(std::string *dataInput)
 		token = getCSV(&subSubString);
 			
 		data.ratings[i].User = token;
+		data.ratings[i].User.append("\0");
 			
 		token = getCSV(&subSubString);
 			
