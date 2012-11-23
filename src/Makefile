@@ -19,7 +19,7 @@ $(CLASS_DIR)/Loader.o: class/Loader.cpp
 	$(CC) $(DBLIBS) -c class/Loader.cpp -o $(CLASS_DIR)/Loader.o
 
 $(CLASS_DIR)/Linear.o: class/Linear.cpp
-	$(CC) -I /usr/include -L /usr/lib -c class/Linear.cpp -o $(CLASS_DIR)/Linear.o
+	$(CC) $(DBLIBS) -c class/Linear.cpp -o $(CLASS_DIR)/Linear.o
 
 $(CLASS_DIR)/Songs.o: class/Songs.cpp
 	$(CC) -c class/Songs.cpp -o $(CLASS_DIR)/Songs.o
