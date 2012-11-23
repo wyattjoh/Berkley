@@ -148,6 +148,7 @@ int main()
 	}
 		
 	file.close();
+	output.close();
 		
 		
 	return 0;
