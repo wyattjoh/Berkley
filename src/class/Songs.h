@@ -19,9 +19,10 @@ public:
 private:
 	song data;
 	std::string dataString;
-	std::string getParent(std::string *inputString);
-	std::string getChild(std::string *inputString);
-	std::string getCSV(std::string *inputString);
+	static std::string getParent(std::string *inputString);
+	static std::string getChild(std::string *inputString);
+	static std::string getCSV(std::string *inputString);
+	static void stripString(std::string *inputString, const char * chars);
 };
 
 #endif

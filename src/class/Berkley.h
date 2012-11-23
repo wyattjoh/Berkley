@@ -11,18 +11,19 @@
 
 class Berkley {
 public:
-	static bool put(char *myKey, char *myData);
-	static bool get(char *searchKey);
-	static std::string getData();
-	Berkley(const char* dbName);
+	bool put(char *myKey, char *myData);
+	bool get(char *searchKey);
+	std::string getData();
+	Berkley(std::string dbName);
 	~Berkley();
 private:
-	static void flush();
-	static void flush(char *myKey);
-	static void flush(char *myKey, char *myData);
-	static DB *db;
-	static DBT key, data;
-	static int ret;
+	void flush();
+	void flush(char *myKey);
+	void flush(char *myKey, char *myData);
+	DB *db;
+	DBT key, data;
+	int ret;
+	std::string dataFile;
 };
 
 #endif

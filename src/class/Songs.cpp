@@ -2,6 +2,7 @@
 #define _SONGS_CPP_
 
 #include "Songs.h"
+#include <algorithm>
 
 std::string * Songs::toString()
 {
@@ -35,18 +36,32 @@ void Songs::setData(std::string *dataInput)
 	std::string substring;
 		
 	substring = getParent(dataInput);
-		
+	stripString(&substring, "[],");
+	
+	// std::cout << "OUTPUT>"<< substring << std::endl;
+	
 	std::istringstream s(substring);
 		
 	s >> data.id;
+	
+	substring = getParent(dataInput);
+	stripString(&substring, "[]");
+	
+	data.Title = substring;
+	
+	substring = getParent(dataInput);
+	stripString(&substring, "[]");
 		
-	data.Title = getParent(dataInput);
-	data.Title.append("\0");
-		
-	data.Artists = getParent(dataInput);
-	data.Artists.append("\0");
+	data.Artists = substring;
+	// data.Artists.append("\0");
 		
 	substring = getParent(dataInput);
+	
+	// std::cout << substring << std::endl;
+	
+	stripString(&substring, "[]");
+	
+	// std::cout << substring << std::endl;
 		
 	int i;
 		
@@ -55,54 +70,86 @@ void Songs::setData(std::string *dataInput)
 	
 	data.rCount = 0;
 	
-	for(i = 0; substring.size() > 0; i++)
+	for(i = 0; ((int)substring.find("("))  != -1; i++)
 	{
+		// std::cout << "INPUT>" << substring << std::endl;
+		
 		subSubString = getChild(&substring);
+		
+		// std::cout << "OUTPUT>"<< subSubString << std::endl;
+		// std::cout << "STRLEN>" << substring.size() << std::endl;
+		// std::cout << "MASTER>" << substring << std::endl;
+		
+		stripString(&subSubString, "()");
+		
+		// std::cout << "SEARCH>" << (((int)substring.find("("))  == -1) << std::endl;
+		
+		// std::cout << "CLEANED>" << subSubString << std::endl;
+		
+		//std::cout << std::count(substring.begin(), substring.end(), ')') << std::endl;
+		
+		//std::cout << substring << std::endl;
+		
+		// std::cout << subSubString << std::endl;
 			
 		token = getCSV(&subSubString);
-			
+		
+		// std::cout << "TOKEN1>" << token << std::endl;
+		// std::cout << "OUTPUT>"<< subSubString << std::endl;
+		
 		data.ratings[i].User = token;
-		data.ratings[i].User.append("\0");
-			
+		
 		token = getCSV(&subSubString);
-			
+		
+		// std::cout << "TOKEN2>" << token << std::endl;
+		// std::cout << "OUTPUT>"<< subSubString << std::endl;
+		
 		std::istringstream r(token);
-			
+		
+		// std::cout << "INT>" << integer << std::endl;
+		
 		r >> data.ratings[i].rating;
 		
 		data.rCount++;
 	}
 }
 
-std::string Songs::getParent(std::string *inputString)
-{
-	int startPos, length;
-	std::string substring;
-		
-	startPos = inputString->find("[") + 1;
-	length = inputString->find("]") - 1;
-		
-	substring = inputString->substr(startPos, length - 1);
-		
-	inputString->erase(0, startPos + length);
-		
-	return substring;
-}
-
 std::string Songs::getChild(std::string *inputString)
 {
 	int startPos, length;
 	std::string substring;
-		
-	startPos = inputString->find("(") + 1;
+	
+	// std::cout << "INPUT>" << *inputString << std::endl;
+	
+	startPos = inputString->find("(");
 	length = inputString->find(")");
+	
+	substring = inputString->substr(startPos, length - startPos + 1);
+	
+	// std::cout << "OUTPUT>" << substring << std::endl;
 		
-	substring = inputString->substr(startPos, length - 1);
-		
-	inputString->erase(0, startPos + length+ 1);
+	// inputString->erase(0, length + startPos);
+	inputString->erase(startPos, length - startPos + 1);
+	
+	// std::cout << "STRLEN>" << inputString->size() << std::endl;
 		
 	return substring;
 
+}
+
+std::string Songs::getParent(std::string *inputString)
+{
+	int startPos, length;
+	std::string substring;
+	
+	startPos = inputString->find("[");
+	length = inputString->find("]");
+		
+	substring = inputString->substr(startPos, length);
+		
+	inputString->erase(0, startPos + length);
+		
+	return substring;
 }
 
 std::string Songs::getCSV(std::string *inputString)
@@ -112,11 +159,24 @@ std::string Songs::getCSV(std::string *inputString)
 		
 	endPos = inputString->find(",");
 		
-	substring = inputString->substr(0, endPos - 1);
+	substring = inputString->substr(0, endPos);
 		
 	inputString->erase(0, endPos + 1);
 		
 	return substring;
+}
+
+void Songs::stripString(std::string *inputString, const char * chars)
+{
+	//char chars[] = "[]";
+	   
+	for (unsigned int i = 0; i < strlen(chars); ++i)
+	{
+		// you need include <algorithm> to use general algorithms like std::remove()
+		inputString->erase (std::remove(inputString->begin(), inputString->end(), chars[i]), inputString->end());
+	}
+	
+	//return *inputString;
 }
 
 #endif

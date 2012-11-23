@@ -4,12 +4,14 @@
 #include <db.h>
 #include "Berkley.h"
 
-DB *Berkley::db;
-DBT Berkley::key, Berkley::data;
-int Berkley::ret = 0;
-
-Berkley::Berkley(const char* dbName)
+Berkley::Berkley(std::string dbName)
 {
+	//dataFile = new std::string(dbName, 0, sizeof(dbName));
+	
+	dataFile = dbName;
+	
+	std::cout << "Created DB: " << dataFile << std::endl;
+	
 	// creates the database object
 	ret = db_create(&db, NULL, 0);
 	if (ret != 0) 
@@ -22,7 +24,7 @@ Berkley::Berkley(const char* dbName)
 	// if (ret != 0)
 	// {
 		// If database doesn't exist, create it 
-		ret = db->open(db, NULL, DATABASE, NULL, DB_HASH, DB_CREATE, 0664); 
+		ret = db->open(db, NULL, dbName.c_str(), NULL, DB_HASH, DB_CREATE, 0664); 
 	// }
 }
 Berkley::~Berkley()
@@ -30,6 +32,10 @@ Berkley::~Berkley()
 	ret = db->close(db, 0);
 	if (ret!=0) 
 		db->err(db, ret, "DB->close");
+	
+	remove(dataFile.c_str());
+	
+	std::cout << "Deleted DB: " << dataFile << std::endl;
 }
 
 bool Berkley::put(char *myKey, char *myData)

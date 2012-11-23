@@ -1,9 +1,24 @@
 #ifndef _LINEAR_CPP_
 #define _LINEAR_CPP_
 
+// My Header
 #include "Linear.h"
+
+// Standard Libs
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <sstream>
+#include <fstream>
 #include <math.h>
+
+// Include Classes
+#include "Berkley.h"
+#include "Songs.h"
+
+// Include Structs
+#include "../struct/song.h"
 #include "../struct/indexed.h"
 
 Linear::Linear()
@@ -43,8 +58,8 @@ double Linear::compare(song *SongA, song *SongB)
 			
 			if(SongA->ratings[i].User.compare(SongB->ratings[f].User) == 0)
 			{
-				std::cout << "Rating " << SongA->ratings[i].User << " " << SongA->ratings[i].rating << std::endl;
-				std::cout << SongA->ratings[i].User << " (" << SongA->ratings[i].rating << ")" << " vs " << SongB->ratings[f].User << " (" << SongB->ratings[f].rating << ")" << std::endl;
+				// std::cout << "Rating " << SongA->ratings[i].User << " " << SongA->ratings[i].rating << std::endl;
+				// std::cout << SongA->ratings[i].User << " (" << SongA->ratings[i].rating << ")" << " vs " << SongB->ratings[f].User << " (" << SongB->ratings[f].rating << ")" << std::endl;
 				
 				A[matchingEntries] = SongA->ratings[i].rating;
 				B[matchingEntries] = SongB->ratings[f].rating;
@@ -63,16 +78,16 @@ double Linear::compare(song *SongA, song *SongB)
 			uint64_t temp = (A[i] - B[i]);
 			sum += temp*temp;
 			
-			std::cout << "Sum: " << sum << std::endl;
+			// std::cout << "Sum: " << sum << std::endl;
 		}
 		
 		result = sqrt(sum);
 		
-		std::cout << "Result: " << result << std::endl;
+		// std::cout << "Result: " << result << std::endl;
 		
 		result /= matchingEntries;
 		
-		std::cout << "Result: " << result << std::endl;
+		// std::cout << "Result: " << result << std::endl;
 	}
 	
 	delete [] A;
@@ -92,15 +107,54 @@ int Linear::compare(const void * b, const void * a)
 		return 0;
 	else
 		return -1;
-	
-	// return (*(int*) a - *(int*) b );
 }
 
-// struct indexed
-// {
-// 	uint64_t index;
-// 	double value;
-// };
-
+uint32_t Linear::loader(Berkley *myDB, const char * filename)
+{
+	std::ifstream file(filename);
+	
+	std::string line;
+	
+	int count = 0;
+		
+	while(getline(file, line))
+	{
+		//std::cout << "Line(" << line << ")" << std::endl;
+		
+		Songs *record = new Songs();
+		(*record).setData(&line);
+		
+		song *rSong = (*record).toStruct();
+			
+		// std::cout << "DATA ===> ID>" << rSong->id << std::endl;
+		// std::cout << "DATA ===> TITLE>" << rSong->Title << std::endl;
+		// std::cout << "DATA ===> ARTSITS>" << rSong->Artists << std::endl;
+			
+		char index[33];
+		
+		sprintf(index, "%d", rSong->id);
+		
+		int charSize = (*record).charSize();
+		
+		std::string * songString = (*record).toString();
+		
+		char * s = new char[charSize + 1];
+		
+		std::copy(songString->begin(), songString->end(), s);
+			
+		// std::cout << index << " <==> " << s << std::endl;
+			
+		myDB->put(index, s);
+			
+		count++;
+		
+		delete [] s;
+		delete record;
+	}
+		
+	file.close();
+		
+	return count;
+}
 
 #endif

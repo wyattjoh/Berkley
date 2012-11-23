@@ -18,9 +18,6 @@
 #include "struct/song.h"
 #include "struct/indexed.h"
 
-// Include Loader
-#include "class/Loader.h"
-
 #define STDID_LEN 5
 #define NAME_LEN 50
 
@@ -29,88 +26,68 @@ int main()
 	Berkley myDB("../data/A4Database.db");
 	
 	// Load the contents of the text file into the database
-	uint64_t numberofvalues = BerkleyLoader::loader(&myDB,"../data/a4data.txt");
+	uint64_t numberofvalues = Linear::loader(&myDB,"../data/a4data.txt");
 	
-	std::cout << "Proccessed " << numberofvalues << " entries." << std::endl;
+	// std::cout << "Proccessed " << numberofvalues << " entries." << std::endl;
 	
+	/*  Loop Vairables  */
 	Songs SongA;
 	Songs SongB;
-	
 	song * SongAStruct;
 	song * SongBStruct;
-	
-	int sfRet;
-	uint64_t quriedID;
+	uint32_t quriedID;
 	char id[33];
-	
 	double result;
-	
 	std::string songData;
 	
-	for (;;)
+	
+	std::ifstream file("../data/queries.txt");
+	std::ofstream output("../data/linearanswers.txt");
+	std::string line;
+	
+	while(getline(file, line) && output.is_open() && output.good())
 	{
-		printf("\nEnter ID for A(0 to exit): "); 
-		sfRet = scanf("%s",id);
+		// printf("\nEnter ID for A(0 to exit): "); 
+		// sfRet = scanf("%s",id);
+		// 
+		// if (id[0]=='0' && sfRet)
+		// 	break;
+		// 
+		// quriedID = atoi(id);
 		
-		if (id[0]=='0' && sfRet)
-			break;
+		std::istringstream s(line);
 		
-		quriedID = atoi(id);
+		s >> quriedID;
+		
+		sprintf(id, "%d", quriedID);
 		
 		if(myDB.get(id))
 		{
 			// std::cout << "Found: " << myDB.getData() << std::endl;
-								 	
+			
 			songData = myDB.getData();
-									
+			
 			SongA.setData(&songData);
 			SongAStruct = SongA.toStruct();
 		}
 		else
 		{
-			std::cout << "Not Found" << std::endl;
+			// std::cout << "Not Found" << std::endl;
 			continue;
 		}
 		
 		indexed * MatchedEntries;
 		MatchedEntries = new indexed[numberofvalues - 1];
 		
-		// printf("\nEnter ID for A(0 to exit): "); 
-		// sfRet = scanf("%s",id);
-		// 
-		// if (id[0]=='0')
-		// 	break;
-		// 
-		// if(myDB.get(id))
-		// {
-		// 	// std::cout << "Found: " << myDB.getData() << std::endl;
-		// 						 	
-		// 	songData = myDB.getData();
-		// 							
-		// 	SongB.setData(&songData);
-		// 	SongBStruct = SongB.toStruct();
-		// 	
-		// }
-		// else
-		// {
-		// 	std::cout << "Not Found" << std::endl;
-		// 	continue;
-		// }
-		// 
-		// result = Linear::compare(SongAStruct, SongBStruct);
-		// 
-		// std::cout << "Distance Calculation: " << result << std::endl;
-		
 		char searchID[33];
-		int n;
 		uint64_t valIndex = 0;
 		
-		for(uint64_t i = 1; i < numberofvalues; i++)
+		for(uint32_t i = 1; i < numberofvalues; i++)
 		{
 			if( i == quriedID )
 				continue;
 			
-			n = sprintf(searchID, "%"PRIu64, i);
+			sprintf(searchID, "%d", i);
 			
 			if(myDB.get(searchID))
 			{
@@ -123,30 +100,39 @@ int main()
 				
 				result = Linear::compare(SongAStruct, SongBStruct);
 				
+				// std::cout << "STORED>" << i << " - " << result << std::endl;
+				
 				MatchedEntries[valIndex].index = i;
-				MatchedEntries[valIndex].value = (double)result;
+				MatchedEntries[valIndex].value = result;
 				
 				valIndex++;
 			}
 			else
 			{
-				std::cout << "Not Found" << std::endl;
+				// std::cout << "Not Found" << std::endl;
 				continue;
 			}
 		}
 		
-		qsort(MatchedEntries, numberofvalues - 1, sizeof(MatchedEntries[0]), Linear::compare);
-		
-		std::cout << "Q:" << quriedID << std::endl;
-		
-		for(int in = 0; in < 100; in++)
+		qsort(MatchedEntries, valIndex - 1, sizeof(MatchedEntries[0]), Linear::compare);
+				
+		// std::cout << "Q:" << quriedID << std::endl;
+				
+		for(uint in = 0; in < 3; in++)
 		{
-			std::cout << in << " - " << MatchedEntries[in].index << " - " << (double)MatchedEntries[in].value << std::endl;
+			output << MatchedEntries[in].index;
+			
+			if(in != 2)
+				output << ",";
+			// std::cout << in << " - " << MatchedEntries[in].index << " - " << (double)MatchedEntries[in].value << std::endl;
 		}
+		
+		output << "\n";
 		
 		delete [] MatchedEntries;
 	}
 	
+	file.close();
 	
 	
 	return 0;
