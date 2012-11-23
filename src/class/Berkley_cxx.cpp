@@ -49,6 +49,8 @@ Berkley_cxx::~Berkley_cxx()
 	remove(dbFile->c_str());
 	
 	// std::cout << "Removed " << *dbFile << std::endl;
+	
+	delete[] dbFile;
 }
 
 std::string * Berkley_cxx::cursorGet(int * searchKey)
