@@ -43,8 +43,8 @@ Berkley_cxx::~Berkley_cxx()
 	    // Error handling code goes here
 	}
 	
-	if (cursorp != NULL)
-	    cursorp->close();
+	// if (cursorp != NULL)
+	//     cursorp->close();
 	
 	remove(dbFile->c_str());
 	
