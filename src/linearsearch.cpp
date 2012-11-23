@@ -16,6 +16,7 @@
 
 // Include Structs
 #include "struct/song.h"
+#include "struct/indexed.h"
 
 // Include Loader
 #include "class/Loader.h"
@@ -28,7 +29,9 @@ int main()
 	Berkley myDB("../data/A4Database.db");
 	
 	// Load the contents of the text file into the database
-	BerkleyLoader::loader(&myDB,"../data/a4data.txt");
+	uint64_t numberofvalues = BerkleyLoader::loader(&myDB,"../data/a4data.txt");
+	
+	std::cout << "Proccessed " << numberofvalues << " entries." << std::endl;
 	
 	Songs SongA;
 	Songs SongB;
@@ -37,7 +40,11 @@ int main()
 	song * SongBStruct;
 	
 	int sfRet;
-	char id[10];
+	uint64_t quriedID;
+	char id[33];
+	
+	double result;
+	
 	std::string songData;
 	
 	for (;;)
@@ -45,8 +52,10 @@ int main()
 		printf("\nEnter ID for A(0 to exit): "); 
 		sfRet = scanf("%s",id);
 		
-		if (id[0]=='0')
+		if (id[0]=='0' && sfRet)
 			break;
+		
+		quriedID = atoi(id);
 		
 		if(myDB.get(id))
 		{
@@ -63,54 +72,82 @@ int main()
 			continue;
 		}
 		
-		printf("\nEnter ID for A(0 to exit): "); 
-		sfRet = scanf("%s",id);
+		indexed * MatchedEntries;
+		MatchedEntries = new indexed[numberofvalues - 1];
 		
-		if (id[0]=='0')
-			break;
+		// printf("\nEnter ID for A(0 to exit): "); 
+		// sfRet = scanf("%s",id);
+		// 
+		// if (id[0]=='0')
+		// 	break;
+		// 
+		// if(myDB.get(id))
+		// {
+		// 	// std::cout << "Found: " << myDB.getData() << std::endl;
+		// 						 	
+		// 	songData = myDB.getData();
+		// 							
+		// 	SongB.setData(&songData);
+		// 	SongBStruct = SongB.toStruct();
+		// 	
+		// }
+		// else
+		// {
+		// 	std::cout << "Not Found" << std::endl;
+		// 	continue;
+		// }
+		// 
+		// result = Linear::compare(SongAStruct, SongBStruct);
+		// 
+		// std::cout << "Distance Calculation: " << result << std::endl;
 		
-		if(myDB.get(id))
+		char searchID[33];
+		int n;
+		uint64_t valIndex = 0;
+		
+		for(uint64_t i = 1; i < numberofvalues; i++)
 		{
-			// std::cout << "Found: " << myDB.getData() << std::endl;
+			if( i == quriedID )
+				continue;
+			
+			n = sprintf(searchID, "%"PRIu64, i);
+			
+			if(myDB.get(searchID))
+			{
+				//std::cout << "Found: " << myDB.getData() << std::endl;
 								 	
-			songData = myDB.getData();
+				songData = myDB.getData();
 									
-			SongB.setData(&songData);
-			SongBStruct = SongB.toStruct();
-			
+				SongB.setData(&songData);
+				SongBStruct = SongB.toStruct();
+				
+				result = Linear::compare(SongAStruct, SongBStruct);
+				
+				MatchedEntries[valIndex].index = i;
+				MatchedEntries[valIndex].value = (double)result;
+				
+				valIndex++;
+			}
+			else
+			{
+				std::cout << "Not Found" << std::endl;
+				continue;
+			}
 		}
-		else
+		
+		qsort(MatchedEntries, numberofvalues - 1, sizeof(MatchedEntries[0]), Linear::compare);
+		
+		std::cout << "Q:" << quriedID << std::endl;
+		
+		for(int in = 0; in < 100; in++)
 		{
-			std::cout << "Not Found" << std::endl;
-			continue;
+			std::cout << in << " - " << MatchedEntries[in].index << " - " << (double)MatchedEntries[in].value << std::endl;
 		}
 		
-		std::cout << "--------------------------------" << std::endl;
-		std::cout << "Title: " << SongAStruct->Title << std::endl;
-		std::cout << "Artists: " << SongAStruct->Artists << std::endl;
-			
-		// for(int i = 0; i<SongAStruct->rCount; i++)
-		// {
-		// 	std::cout << "Rating " << SongAStruct->ratings[i].User << " " << SongAStruct->ratings[i].rating << std::endl;
-		// }
-			
-		std::cout << "--------------------------------" << std::endl;
-		
-		std::cout << "--------------------------------" << std::endl;
-		std::cout << "Title: " << SongBStruct->Title << std::endl;
-		std::cout << "Artists: " << SongBStruct->Artists << std::endl;
-			
-		// for(int i = 0; i<SongBStruct->rCount; i++)
-		// {
-		// 	std::cout << "Rating " << SongBStruct->ratings[i].User << " " << SongBStruct->ratings[i].rating << std::endl;
-		// }
-		
-		std::cout << "--------------------------------" << std::endl;
-		
-		double result = Linear::compare(SongAStruct, SongBStruct);
-		
-		std::cout << "Distance Calculation: " << result << std::endl;
+		delete [] MatchedEntries;
 	}
+	
+	
 	
 	return 0;
 } 

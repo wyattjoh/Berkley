@@ -3,7 +3,7 @@
 
 namespace BerkleyLoader
 {
-	void loader(Berkley *myDB, const char * dataFile);
+	uint32_t loader(Berkley *myDB, const char * dataFile);
 }
 
 #endif

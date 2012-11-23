@@ -17,7 +17,7 @@
 
 namespace BerkleyLoader
 {
-	void loader(Berkley *myDB, const char * dataFile)
+	uint32_t loader(Berkley *myDB, const char * dataFile)
 	{
 		std::ifstream file(dataFile);
 	
@@ -25,13 +25,11 @@ namespace BerkleyLoader
 	
 		std::cout << "Processing input text file...";
 	
-		//int count = 0;
+		int count = 0;
 	
 		//while(getline(file, line) && count <= 30)
 		while(getline(file, line))
 		{
-			//count++;
-		
 			//std::cout << "Line(" << line << ")" << std::endl;
 		
 			Songs *record = new Songs();
@@ -55,6 +53,8 @@ namespace BerkleyLoader
 			//strcpy(s, (*record).toString()->c_str());
 		
 			myDB->put(index, s);
+			
+			count++;
 		
 			delete [] s;
 			delete record;
@@ -63,6 +63,8 @@ namespace BerkleyLoader
 		file.close();
 		
 		std::cout << "done." << std::endl;
+		
+		return count;
 	}
 }
 
