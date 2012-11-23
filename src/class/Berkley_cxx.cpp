@@ -7,7 +7,7 @@
 Berkley_cxx::Berkley_cxx(const char* dbName)
 {
 	
-	dbFile = new std::string(dbName);
+	// dbFile = new std::string(dbName);
 	
 	// std::cout << "Created " << *dbFile << std::endl;
 	
@@ -46,12 +46,12 @@ Berkley_cxx::~Berkley_cxx()
 	// if (cursorp != NULL)
 	//     cursorp->close();
 	
-	remove(dbFile->c_str());
+	// remove(dbFile->c_str());
 	
 	// std::cout << "Removed " << *dbFile << std::endl;
 	
-	delete [] dbFile;
-	delete [] db;
+	// delete [] dbFile;
+	// delete [] db;
 }
 
 std::string * Berkley_cxx::cursorGet(int * searchKey)
