@@ -6,23 +6,24 @@
 
 DB *Berkley::db;
 DBT Berkley::key, Berkley::data;
-int Berkley::ret;
+int Berkley::ret = 0;
 
 Berkley::Berkley(const char* dbName)
 {
 	// creates the database object
-	if ((ret = db_create(&db, NULL, 0)) != 0) 
+	ret = db_create(&db, NULL, 0);
+	if (ret != 0) 
 	{
 		fprintf(stderr, "db_create: %s\n", db_strerror(ret));
 	}
 
 	// opens database
-	ret = db->open(db, NULL, dbName, NULL, DB_HASH, 0, 0664);
-	if (ret != 0)
-	{
+	// ret = db->open(db, NULL, dbName, NULL, DB_HASH, 0, 0664);
+	// if (ret != 0)
+	// {
 		// If database doesn't exist, create it 
 		ret = db->open(db, NULL, DATABASE, NULL, DB_HASH, DB_CREATE, 0664); 
-	}
+	// }
 }
 Berkley::~Berkley()
 {
