@@ -54,6 +54,16 @@ Berkley_cxx::~Berkley_cxx()
 	delete db;
 }
 
+Db * Berkley_cxx::getDB()
+{
+	return db;
+}
+
+Dbc * Berkley_cxx::getCursor()
+{
+	return cursorp;
+}
+
 std::string * Berkley_cxx::cursorGet(int * searchKey)
 {
 	try {

@@ -13,14 +13,17 @@ class Songs {
 public:
 	std::string *toString();
 	song * toStruct();
-	char * toChar();
+	// char * toChar();
 	int charSize();
 	void setData(std::string *dataInput);
+	
+	static int getJustID(std::string * inputString);
 	
 private:
 	song data;
 	std::string dataString;
 	static std::string getParent(std::string *inputString);
+	static std::string getParent(std::string *inputString, bool del);
 	static std::string getChild(std::string *inputString);
 	static std::string getCSV(std::string *inputString);
 	static void stripString(std::string *inputString, const char * chars);

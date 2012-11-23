@@ -14,19 +14,20 @@ song * Songs::toStruct()
 	return &data;
 }
 
-char * Songs::toChar()
-{
-	char * s;
-	s = new char[dataString.size()];
-	
-	strcpy(s, dataString.c_str());
-	
-	return s;
-}
-int Songs::charSize()
-{
-	return dataString.size();
-}
+// char * Songs::toChar()
+// {
+// 	char * s;
+// 	s = new char[dataString.size()];
+// 	
+// 	strcpy(s, dataString.c_str());
+// 	
+// 	return s;
+// }
+
+// int Songs::charSize()
+// {
+// 	return dataString.size();
+// }
 
 void Songs::setData(std::string *dataInput)
 {
@@ -114,6 +115,23 @@ void Songs::setData(std::string *dataInput)
 	}
 }
 
+int Songs::getJustID(std::string * inputString)
+{
+	std::string substring;
+	int ID;
+		
+	substring = getParent(inputString,0);
+	stripString(&substring, "[],");
+	
+	// std::cout << "OUTPUT>"<< substring << std::endl;
+	
+	std::istringstream s(substring);
+		
+	s >> ID;
+	
+	return ID;
+}
+
 std::string Songs::getChild(std::string *inputString)
 {
 	int startPos, length;
@@ -148,6 +166,22 @@ std::string Songs::getParent(std::string *inputString)
 	substring = inputString->substr(startPos, length);
 		
 	inputString->erase(0, startPos + length);
+		
+	return substring;
+}
+
+std::string Songs::getParent(std::string *inputString, bool del = 0)
+{
+	int startPos, length;
+	std::string substring;
+	
+	startPos = inputString->find("[");
+	length = inputString->find("]");
+		
+	substring = inputString->substr(startPos, length);
+	
+	if(del)
+		inputString->erase(0, startPos + length);
 		
 	return substring;
 }

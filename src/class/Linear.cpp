@@ -117,40 +117,50 @@ uint32_t Linear::loader(Berkley_cxx *myDB, const char * filename)
 	std::string line;
 	
 	int count = 0;
+	// int index = 1;
+	
+	int index;
 		
 	while(getline(file, line))
 	{
 		//std::cout << "Line(" << line << ")" << std::endl;
 		
-		Songs *record = new Songs();
-		(*record).setData(&line);
-		
-		song *rSong = (*record).toStruct();
+		// Songs *record = new Songs();
+		// (*record).setData(&line);
+		// 
+		// song *rSong = (*record).toStruct();
 			
 		// std::cout << "DATA ===> ID>" << rSong->id << std::endl;
 		// std::cout << "DATA ===> TITLE>" << rSong->Title << std::endl;
 		// std::cout << "DATA ===> ARTSITS>" << rSong->Artists << std::endl;
 			
-		char index[33];
+		// char index[33];
 		
-		sprintf(index, "%d", rSong->id);
+		// sprintf(index, "%d", rSong->id);
 		
-		int charSize = (*record).charSize();
+		// int charSize = (*record).charSize();
 		
-		std::string * songString = (*record).toString();
+		// std::string * songString = (*record).toString();
 		
-		char * s = new char[charSize + 1];
+		// char * s = new char[charSize + 1];
 		
-		std::copy(songString->begin(), songString->end(), s);
+		// std::copy(songString->begin(), songString->end(), s);
 			
 		// std::cout << index << " <==> " << s << std::endl;
 			
 		//myDB->put(index, s);
+		
+		index = Songs::getJustID(&line);
+		
+		myDB->put(&index, &line);
+		
+		std::cout << "INSERT>" << index << "," << line << std::endl;
 			
 		count++;
+		// index++;
 		
-		delete [] s;
-		delete record;
+		// delete [] s;
+		// delete record;
 	}
 		
 	file.close();

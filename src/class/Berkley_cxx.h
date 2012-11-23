@@ -41,6 +41,9 @@ public:
 	void cursorPut(std::ifstream * file);
 	void put(int * index, std::string * dataString);
 	
+	Db * getDB();
+	Dbc * getCursor();
+	
 	// 
 	// bool put(int *myKey, std::string *myData);
 	// 
