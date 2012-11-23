@@ -152,9 +152,19 @@ uint32_t Linear::loader(Berkley_cxx *myDB, const char * filename)
 		
 		index = Songs::getJustID(&line);
 		
+		// std::string testString = "Hey!42";
+		
+		// const char * cString = testString.c_str();
+		
+		// std::cout << "MYSTR>" << cString << std::endl;
+		
 		myDB->put(&index, &line);
 		
-		std::cout << "INSERT>" << index << "," << line << std::endl;
+		// std::cout << "INSERT>" << index << "," << line << std::endl;
+		
+		std::string *testData = myDB->getP(&index);
+		
+		std::cout << "TESTER>" << index << "," << *testData << std::endl;
 			
 		count++;
 		// index++;
@@ -167,5 +177,13 @@ uint32_t Linear::loader(Berkley_cxx *myDB, const char * filename)
 		
 	return count;
 }
+
+// void Linear::query(Berkley_cxx *myDB, int index)
+// {
+// 	// std::cout << "OUT>";
+// 	std::string testData = myDB->get(&index);
+// 	
+// 	std::cout << testData << std::endl;
+// }
 
 #endif

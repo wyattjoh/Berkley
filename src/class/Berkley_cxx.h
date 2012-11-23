@@ -37,9 +37,12 @@ public:
 	Berkley_cxx(const char * dbName);
 	~Berkley_cxx();
 	
-	std::string * cursorGet(int * searchKey);
+	std::string cursorGet(int * searchKey);
 	void cursorPut(std::ifstream * file);
+	void put(int * index, const char * dataString);//std::string * dataString);
 	void put(int * index, std::string * dataString);
+	std::string get(int * index);
+	std::string * getP(int * index);
 	
 	Db * getDB();
 	Dbc * getCursor();
@@ -53,6 +56,7 @@ public:
 	
 private:
 	// void flush();
+	uint maxLength;
 	
 	// DB Open
 	Db *db;

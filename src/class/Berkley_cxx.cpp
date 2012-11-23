@@ -6,7 +6,7 @@
 
 Berkley_cxx::Berkley_cxx(const char* dbName)
 {
-	
+	maxLength = 0;
 	dbFile = new std::string(dbName);
 	
 	std::cout << "Created " << *dbFile << std::endl;
@@ -64,7 +64,7 @@ Dbc * Berkley_cxx::getCursor()
 	return cursorp;
 }
 
-std::string * Berkley_cxx::cursorGet(int * searchKey)
+std::string Berkley_cxx::cursorGet(int * searchKey)
 {
 	try {
 	    // database open omitted for clarity
@@ -79,15 +79,28 @@ std::string * Berkley_cxx::cursorGet(int * searchKey)
 	    // Set up our DBTs
 	    Dbt key(searchKey, sizeof(int));
 		Dbt data;
-
+		
 	    // Position the cursor to the first record in the database whose
 	    // key matches the search key and whose data begins with the search
 	    // data.
 	    int ret = cursorp->get(&key, &data, DB_SET);
-	    if (!ret) {
+		
+		if (!ret) {
 	        // Do something with the data
-			return (std::string *)data.get_data();
+			
+			std::string MyData = *((std::string *) data.get_data());
+			
+			std::cout << "DBGET>" << (std::string *) data.get_data()  <<  " <<IS>> " << MyData << std::endl;
+			
+			if (cursorp != NULL)
+			    cursorp->close();
+			
+			// return (void *)data.get_data();
+			return MyData;
 	    }
+		
+		if (cursorp != NULL)
+		    cursorp->close();
 		
 		return NULL;
 		
@@ -106,18 +119,159 @@ void Berkley_cxx::cursorPut(std::ifstream * file)
 	
 }
 
-void Berkley_cxx::put(int * index, std::string * dataString)
+void Berkley_cxx::put(int * index, const char * dataString)//std::string * dataString)
 {
 	// char *description = "Grocery bill.";
 	// float money = 122.45;
+	
+	// std::string myDataString = * dataString;
+	int myIndex = *index;
 
-	Dbt key(index, sizeof(int));
-	Dbt data(dataString, sizeof(dataString));
-
+	Dbt key(&myIndex, sizeof(int));
+	// Dbt data(&myDataString, myDataString.capacity());
+	Dbt data(&dataString, strlen(dataString));
+	
+	if(maxLength < strlen(dataString))
+		maxLength = strlen(dataString);
+	
+	std::cout << "INSERT>" << myIndex << "," << dataString << std::endl;
+	
 	int ret = db->put(NULL, &key, &data, DB_NOOVERWRITE);
 	if (ret == DB_KEYEXIST) {
 	    db->err(ret, "Put failed because key %f already exists", index);
 	}
+	else
+	{
+		// get(index);
+	}
+}
+
+void Berkley_cxx::put(int * index, std::string * dataString)
+{
+	// char *description = "Grocery bill.";
+	// float money = 122.45;
+	
+	std::string myDataString = * dataString;
+	int myIndex = *index;
+
+	Dbt key(&myIndex, sizeof(int));
+	Dbt data(&myDataString, myDataString.capacity());
+	
+	// if(maxLength < strlen(dataString))
+	// 	maxLength = strlen(dataString);
+	
+	std::cout << "INSERT>" << myIndex << "," << myDataString << std::endl;
+	
+	int ret = db->put(NULL, &key, &data, DB_NOOVERWRITE);
+	if (ret == DB_KEYEXIST) {
+	    db->err(ret, "Put failed because key %f already exists", index);
+	}
+	else
+	{
+		// get(index);
+	}
+}
+
+std::string Berkley_cxx::get(int * index)
+{
+	// std::string MyData = "ge";
+	
+	try {
+		Dbt key, data;
+		
+		// char *dataBuffer;
+		
+		// std::string *myData;
+
+		key.set_data(index);
+		key.set_size(sizeof(int));
+	
+		// data.set_data(myData);
+		// data.set_ulen(maxLength);
+		// data.set_flags(DB_DBT_USERMEM);
+		
+		// std::cout << "Getting: " << *index << std::endl;
+		
+		db->get(NULL, &key, &data, 0);
+		
+		// std::cout << *((std::string*) data.get_data()) << std::endl;
+		
+		// std::cout << "Got it: " << (char *) data.get_data() << std::endl;
+		
+		// std::string MyData = "ge";
+		// std::string MyData = *((std::string*) data.get_data());
+		std::string MyData = std::string((const char *) data.get_data());
+		
+		// std::cout << "Got it: " << MyData << std::endl;
+		
+		return MyData;
+		
+		// std::cout << "DATA>" << *index << "," << MyData << std::endl;
+	
+	} catch(DbException &e) {
+	        db->err(e.get_errno(), "Error!");
+			std::cout << "exception detected" << std::endl;
+			return NULL;
+	} catch(std::exception &e) {
+	        db->errx("Error! %s", e.what());
+			std::cout << "exception detected" << std::endl;
+			return NULL;
+	}
+	
+	std::cout << "Ok?" << std::endl;
+	
+	return NULL;
+}
+
+std::string * Berkley_cxx::getP(int * index)
+{
+	// std::string MyData = "ge";
+	
+	try {
+		Dbt key, data;
+		
+		// char *dataBuffer;
+		
+		// std::string *myData;
+
+		key.set_data(index);
+		key.set_size(sizeof(int));
+	
+		// data.set_data(myData);
+		// data.set_ulen(maxLength);
+		// data.set_flags(DB_DBT_USERMEM);
+		
+		std::cout << "Getting: " << *index << std::endl;
+		
+		db->get(NULL, &key, &data, 0);
+		
+		// std::cout << *((std::string*) data.get_data()) << std::endl;
+		
+		// std::cout << "Got it: " << (char *) data.get_data() << std::endl;
+		
+		// std::string MyData = "ge";
+		std::string *MyData = (std::string *) data.get_data();
+		// std::string MyData = std::string((const char *) data.get_data());
+		
+		std::cout << "Got it: " << *MyData << std::endl;
+		
+		return (std::string *) data.get_data();
+		
+		// std::cout << "DATA>" << *index << "," << MyData << std::endl;
+	
+	} catch(DbException &e) {
+	        db->err(e.get_errno(), "Error!");
+			std::cout << "exception detected" << std::endl;
+			return NULL;
+	} catch(std::exception &e) {
+	        db->errx("Error! %s", e.what());
+			std::cout << "exception detected" << std::endl;
+			return NULL;
+	}
+	
+	std::cout << "Ok?" << std::endl;
+	
+	return NULL;
 }
 
 // Berkley::Berkley(std::string dbName)
