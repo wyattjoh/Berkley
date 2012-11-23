@@ -58,7 +58,7 @@ private:
 	// DB Cursor
 	Dbc *cursorp;
 	
-	// std::string *dbFile;
+	std::string *dbFile;
 	
 	// std::string dataFile;
 };

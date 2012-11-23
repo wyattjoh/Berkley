@@ -7,7 +7,7 @@
 Berkley_cxx::Berkley_cxx(const char* dbName)
 {
 	
-	// dbFile = new std::string(dbName);
+	dbFile = new std::string(dbName);
 	
 	// std::cout << "Created " << *dbFile << std::endl;
 	
@@ -50,7 +50,7 @@ Berkley_cxx::~Berkley_cxx()
 	
 	// std::cout << "Removed " << *dbFile << std::endl;
 	
-	// delete [] dbFile;
+	delete dbFile;
 	delete db;
 }
 
