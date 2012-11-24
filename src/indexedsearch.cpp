@@ -32,15 +32,12 @@ int main()
 	
 	DB_ENV * dbEnv = Berkley::iniEnv();
 	
-	Index objectIndex;
-	Index objectIndex2;
-	
 	t1 = clock();
 	
-	Berkley* myDB = new Berkley("../data/A4Database.db");
+	Berkley myDB = Berkley("../data/A4Database.db");
 	
 	// Load the contents of the text file into the database
-	uint64_t numberofvalues = Linear::loader(myDB,"../data/a4data.txt");
+	uint64_t numberofvalues = Linear::loader(&myDB,"../data/a4data.txt");
 	
 	t2 = clock();
 	
@@ -48,9 +45,9 @@ int main()
 	
 	t1 = clock();
 	
-	Berkley* indexDB = new Berkley("../data/A4IndexDatabase.db");
+	Berkley indexDB = Berkley("../data/A4IndexDatabase.db");
 	
-	numberofvalues = objectIndex2.loader(indexDB,"../data/a4data.txt");
+	numberofvalues = Index::loader(&indexDB,"../data/a4data.txt");
 	
 	t2 = clock();
 	
@@ -91,11 +88,11 @@ int main()
 			
 		sprintf(id, "%d", quriedID);
 			
-		if(myDB->get(id))
+		if(myDB.get(id))
 		{
-			// std::cout << "Found: " << myDB->getData() << std::endl;
+			// std::cout << "Found: " << myDB.getData() << std::endl;
 				
-			songData = myDB->getData();
+			songData = myDB.getData();
 				
 			SongA.setData(&songData);
 			SongAStruct = SongA.toStruct();
@@ -112,9 +109,9 @@ int main()
 		{
 			char * userChar = (char*)SongAStruct->ratings[rIndex].User.c_str();
 			
-			if(indexDB->get(userChar))
+			if(indexDB.get(userChar))
 			{
-				movData += indexDB->getData();
+				movData += indexDB.getData();
 				
 			}
 			else
@@ -169,11 +166,11 @@ int main()
 			
 			sprintf(searchID, "%d", *it);
 			
-			if(myDB->get(searchID))
+			if(myDB.get(searchID))
 			{
-				//std::cout << "Found: " << myDB->getData() << std::endl;
+				//std::cout << "Found: " << myDB.getData() << std::endl;
 									 	
-				songData = myDB->getData();
+				songData = myDB.getData();
 										
 				SongB.setData(&songData);
 				SongBStruct = SongB.toStruct();
@@ -218,15 +215,6 @@ int main()
 	std::cout << "Queries finished in " << ((float) t2 - (float) t1) / CLOCKS_PER_SEC << " seconds." << std::endl;
 		
 	file.close();
-	
-	// std::cout << "Cleaning up..." << std::endl;
-	
-	delete myDB;
-	delete indexDB;
-	
-	if (dbEnv != NULL) {
-	    dbEnv->close(dbEnv, 0);
-	}
 	
 	return 0;
 } 

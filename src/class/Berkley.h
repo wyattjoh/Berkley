@@ -32,6 +32,7 @@ public:
 		return env;
 	}
 private:
+	static int dbCount;
 	static DB_ENV *env;
 	
 	void flush();

@@ -10,7 +10,7 @@ public:
 	Index();
 	static double compare(song *SongA, song *SongB);
 	static int compare(const void * a, const void * b);
-	uint32_t loader(Berkley *myDB, const char * filename);
+	static uint32_t loader(Berkley *myDB, const char * filename);
 };
 
 #endif

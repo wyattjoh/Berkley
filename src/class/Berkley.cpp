@@ -5,6 +5,7 @@
 #include "Berkley.h"
 
 DB_ENV *Berkley::env;
+int Berkley::dbCount = 0;
 
 Berkley::Berkley(std::string dbName)
 {
@@ -23,6 +24,8 @@ Berkley::Berkley(std::string dbName)
 	ret = db->open(db, NULL, dbName.c_str(), NULL, DB_HASH, DB_CREATE, 0664); 
 	
 	// std::cout << "Created DB: " << dataFile << std::endl;
+	
+	dbCount++;
 }
 Berkley::~Berkley()
 {
@@ -42,6 +45,13 @@ Berkley::~Berkley()
 	remove("../scratch/__db.003");
 	
 	// std::cout << "Deleted DB: " << dataFile << std::endl;
+	
+	dbCount--;
+	
+	if (dbCount == 0 && env != NULL)
+	{
+	    env->close(env, 0);
+	}
 }
 
 bool Berkley::put(char *myKey, char *myData)

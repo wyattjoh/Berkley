@@ -150,7 +150,6 @@ uint32_t Linear::loader(Berkley *myDB, const char * filename)
 			
 		count++;
 		
-		// delete [] s;
 		delete record;
 	}
 		
