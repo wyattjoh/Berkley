@@ -19,15 +19,27 @@ public:
 	
 	static void iniEnv()
 	{
-		int ret;
 		env = NULL;
 		
-		ret = db_env_create(&env, 0);
+		if( db_env_create(&env, 0) )
+		{
+			std::cout << "Cannot create env" << std::endl;
+			return;
+		}
 		
-		ret = env->set_data_dir(env, "../scratch/");
+		if( env->set_data_dir(env, "../scratch/") != 0 )
+		{
+			std::cout << "Cannot set data directory (../scratch/)." << std::endl;
+			return;
+		}
 		
 		/* Open an environment with just a memory pool. */
-		ret = env->open(env, "../scratch/", DB_CREATE | DB_INIT_MPOOL, 0);
+		if( env->open(env, "../scratch/", DB_CREATE | DB_INIT_MPOOL, 0) != 0 )
+		{
+			std::cout << "Cannot open env." << std::endl;
+			return;
+		}
+		
 	}
 private:
 	static int dbCount;
