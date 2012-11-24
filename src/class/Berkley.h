@@ -17,7 +17,7 @@ public:
 	Berkley(std::string dbName);
 	~Berkley();
 	
-	static DB_ENV * iniEnv()
+	static void iniEnv()
 	{
 		int ret;
 		env = NULL;
@@ -28,8 +28,6 @@ public:
 		
 		/* Open an environment with just a memory pool. */
 		ret = env->open(env, "../scratch/", DB_CREATE | DB_INIT_MPOOL, 0);
-		
-		return env;
 	}
 private:
 	static int dbCount;

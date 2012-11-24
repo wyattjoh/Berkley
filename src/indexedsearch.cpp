@@ -30,7 +30,7 @@ int main()
 	
 	std::cout << "\nIndexed Search Program" << std::endl;
 	
-	DB_ENV * dbEnv = Berkley::iniEnv();
+	Berkley::iniEnv();
 	
 	t1 = clock();
 	
@@ -207,7 +207,7 @@ int main()
 			
 		output << "\n";
 			
-		delete MatchedEntries;
+		delete [] MatchedEntries;
 	}
 	
 	t2 = clock();
