@@ -1,3 +1,7 @@
+# Name: Wyatt Johnson
+# Unix: wyatt
+# Date: Nov 23, 2012
+
 CC=g++ -Wall -O3
 FLAGS=-lm
 DBLIBS=-L/usr/local/BerkeleyDB.5.3/lib -I /usr/local/BerkeleyDB.5.3/include/ -I /usr/include -L /usr/lib

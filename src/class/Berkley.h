@@ -1,3 +1,7 @@
+// Name: Wyatt Johnson
+// Unix: wyatt
+// Date: Nov 23, 2012
+
 #ifndef _BERKLEY_H_
 #define _BERKLEY_H_
 
@@ -6,8 +10,6 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
-
-//#define DATABASE "../data/A4Database.db"
 
 class Berkley {
 public:

@@ -1,3 +1,7 @@
+// Name: Wyatt Johnson
+// Unix: wyatt
+// Date: Nov 23, 2012
+
 #ifndef _LINEAR_H_
 #define _LINEAR_H_
 

@@ -1,3 +1,7 @@
+// Name: Wyatt Johnson
+// Unix: wyatt
+// Date: Nov 23, 2012
+
 #ifndef _INDEX_H_
 #define _INDEX_H_
 

@@ -1,6 +1,6 @@
-// Berkeley DB Example
-// This program creates/uses a hash file to hold (id/student_name) of students 
-// gcc -lm -ldb -I /usr/local/include -L /usr/local/lib -O bdb_sample.c
+// Name: Wyatt Johnson
+// Unix: wyatt
+// Date: Nov 23, 2012
 
 #include <iostream>
 #include <stdio.h>

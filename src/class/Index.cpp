@@ -1,3 +1,7 @@
+// Name: Wyatt Johnson
+// Unix: wyatt
+// Date: Nov 23, 2012
+
 #ifndef _INDEX_CPP_
 #define _INDEX_CPP_
 
@@ -35,11 +39,6 @@ double Index::compare(song *SongA, song *SongB)
 	int * A;
 	int * B;
 	
-	// uint64_t sum = 0;
-	// 
-	// for(uint64_t i = 0; )
-	// 
-	
 	if(SongA->rCount >= SongB->rCount)
 	{
 		A = new int[SongA->rCount];
@@ -58,9 +57,6 @@ double Index::compare(song *SongA, song *SongB)
 			
 			if(SongA->ratings[i].User.compare(SongB->ratings[f].User) == 0)
 			{
-				// std::cout << "Rating " << SongA->ratings[i].User << " " << SongA->ratings[i].rating << std::endl;
-				// std::cout << SongA->ratings[i].User << " (" << SongA->ratings[i].rating << ")" << " vs " << SongB->ratings[f].User << " (" << SongB->ratings[f].rating << ")" << std::endl;
-				
 				A[matchingEntries] = SongA->ratings[i].rating;
 				B[matchingEntries] = SongB->ratings[f].rating;
 				
@@ -77,17 +73,11 @@ double Index::compare(song *SongA, song *SongB)
 		{
 			uint64_t temp = (A[i] - B[i]);
 			sum += temp*temp;
-			
-			// std::cout << "Sum: " << sum << std::endl;
 		}
 		
 		result = sqrt(sum);
 		
-		// std::cout << "Result: " << result << std::endl;
-		
 		result /= matchingEntries;
-		
-		// std::cout << "Result: " << result << std::endl;
 	}
 	
 	delete [] A;
