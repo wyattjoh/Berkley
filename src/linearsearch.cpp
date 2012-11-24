@@ -8,6 +8,7 @@
 #include <string.h>
 #include <sstream>
 #include <fstream>
+#include <time.h>
 
 // Include Classes
 #include "class/Berkley.h"
@@ -23,12 +24,18 @@
 
 int main() 
 {	
+	clock_t t1, t2;
+	
+	std::cout << "\nLinear Search Program" << std::endl;
+	
+	t1 = clock();
 	Berkley myDB("../data/A4Database.db");
 	
 	// Load the contents of the text file into the database
 	uint64_t numberofvalues = Linear::loader(&myDB,"../data/a4data.txt");
 	
-	// std::cout << "Proccessed " << numberofvalues << " entries." << std::endl;
+	t2 = clock();
+	std::cout << "Proccessed " << numberofvalues << " entries in " << ((float) t2 - (float) t1) / CLOCKS_PER_SEC << " seconds." << std::endl;
 	
 	/*  Loop Vairables  */
 	Songs SongA;
@@ -44,6 +51,8 @@ int main()
 	std::ifstream file("../data/queries.txt");
 	std::ofstream output("../data/linearanswers.txt");
 	std::string line;
+	
+	t1 = clock();
 	
 	while(getline(file, line) && output.is_open() && output.good())
 	{
@@ -131,6 +140,9 @@ int main()
 		
 		delete [] MatchedEntries;
 	}
+	
+	t2 = clock();
+	std::cout << "Queries finished in " << ((float) t2 - (float) t1) / CLOCKS_PER_SEC << " seconds." << std::endl;
 	
 	file.close();
 	

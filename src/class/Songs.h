@@ -9,15 +9,19 @@
 
 #include "../struct/song.h"
 
+#include "Berkley.h"
+
 class Songs {
 public:
-	std::string *toString();
+	std::string toString();
 	song * toStruct();
 	char * toChar();
 	int charSize();
 	void setData(std::string *dataInput);
+	void updateUsersDB(Berkley * indexDB);
 private:
 	song data;
+	std::string mine;
 	std::string dataString;
 	static std::string getParent(std::string *inputString);
 	static std::string getChild(std::string *inputString);

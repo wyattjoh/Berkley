@@ -4,9 +4,12 @@
 #include "Songs.h"
 #include <algorithm>
 
-std::string * Songs::toString()
+std::string Songs::toString()
 {
-	return &dataString;
+	
+	// std::cout << "STRING>" << dataString << std::endl;
+	
+	return dataString;
 }
 
 song * Songs::toStruct()
@@ -31,14 +34,14 @@ int Songs::charSize()
 void Songs::setData(std::string *dataInput)
 {
 		
-	dataString = dataInput->substr(0,-1);
+	dataString = dataInput->substr(0,dataInput->length());
 		
 	std::string substring;
 		
 	substring = getParent(dataInput);
 	stripString(&substring, "[],");
 	
-	// std::cout << "OUTPUT>"<< substring << std::endl;
+	// std::cout << "OUTPUT>"<< dataString << std::endl;
 	
 	std::istringstream s(substring);
 		
@@ -114,6 +117,39 @@ void Songs::setData(std::string *dataInput)
 	}
 }
 
+void Songs::updateUsersDB(Berkley * indexDB)
+{
+	// Itterate over all users that have rated said song with id saved
+	for(int i = 0; i < data.rCount; i++)
+	{
+		// std::cout << data.ratings[i].User << ", ";
+		
+		// std::cout << "Looking up..." << std::endl;
+		
+		char * userChar = (char*)data.ratings[i].User.c_str();
+		char songID[33];
+		
+		sprintf(songID, "%d,", data.id);
+		
+		if(indexDB->get(userChar))
+		{
+			std::string movData = indexDB->getData();
+			movData.append(songID);
+			
+			char * newMovData = (char*)movData.c_str();
+			
+			indexDB->put(userChar, newMovData);
+		}
+		else
+		{
+			// std::cout << userChar << std::endl;
+			indexDB->put(userChar, songID);
+		}
+		
+		//std::string movs = indexDB.get;
+	}
+}
+
 std::string Songs::getChild(std::string *inputString)
 {
 	int startPos, length;
@@ -127,7 +163,7 @@ std::string Songs::getChild(std::string *inputString)
 	substring = inputString->substr(startPos, length - startPos + 1);
 	
 	// std::cout << "OUTPUT>" << substring << std::endl;
-		
+	
 	// inputString->erase(0, length + startPos);
 	inputString->erase(startPos, length - startPos + 1);
 	

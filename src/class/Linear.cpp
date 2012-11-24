@@ -119,7 +119,7 @@ uint32_t Linear::loader(Berkley *myDB, const char * filename)
 		
 	while(getline(file, line))
 	{
-		//std::cout << "Line(" << line << ")" << std::endl;
+		// std::cout << "Line(" << line << ")" << std::endl;
 		
 		Songs *record = new Songs();
 		(*record).setData(&line);
@@ -134,13 +134,15 @@ uint32_t Linear::loader(Berkley *myDB, const char * filename)
 		
 		sprintf(index, "%d", rSong->id);
 		
-		int charSize = (*record).charSize();
+		// int charSize = (*record).charSize();
 		
-		std::string * songString = (*record).toString();
+		std::string songString = (*record).toString();
 		
-		char * s = new char[charSize + 1];
+		// char * s = new char[charSize + 1];
 		
-		std::copy(songString->begin(), songString->end(), s);
+		// std::copy(songString.begin(), songString.end(), s);
+		
+		char *s = (char*)songString.c_str();
 			
 		// std::cout << index << " <==> " << s << std::endl;
 			
@@ -148,7 +150,7 @@ uint32_t Linear::loader(Berkley *myDB, const char * filename)
 			
 		count++;
 		
-		delete [] s;
+		// delete [] s;
 		delete record;
 	}
 		

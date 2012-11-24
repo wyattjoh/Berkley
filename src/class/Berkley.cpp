@@ -4,28 +4,25 @@
 #include <db.h>
 #include "Berkley.h"
 
+DB_ENV *Berkley::env;
+
 Berkley::Berkley(std::string dbName)
 {
 	//dataFile = new std::string(dbName, 0, sizeof(dbName));
 	
 	dataFile = dbName;
 	
-	std::cout << "Created DB: " << dataFile << std::endl;
-	
 	// creates the database object
-	ret = db_create(&db, NULL, 0);
+	ret = db_create(&db, env, 0);
 	if (ret != 0) 
 	{
 		fprintf(stderr, "db_create: %s\n", db_strerror(ret));
 	}
 
-	// opens database
-	// ret = db->open(db, NULL, dbName, NULL, DB_HASH, 0, 0664);
-	// if (ret != 0)
-	// {
-		// If database doesn't exist, create it 
-		ret = db->open(db, NULL, dbName.c_str(), NULL, DB_HASH, DB_CREATE, 0664); 
-	// }
+	// If database doesn't exist, create it 
+	ret = db->open(db, NULL, dbName.c_str(), NULL, DB_HASH, DB_CREATE, 0664); 
+	
+	// std::cout << "Created DB: " << dataFile << std::endl;
 }
 Berkley::~Berkley()
 {
@@ -33,15 +30,24 @@ Berkley::~Berkley()
 	if (ret!=0) 
 		db->err(db, ret, "DB->close");
 	
+	// if (env != NULL) {
+	//     env->close(env, 0);
+	// }
+	
 	remove(dataFile.c_str());
 	
-	std::cout << "Deleted DB: " << dataFile << std::endl;
+	// Delete cache files
+	remove("../scratch/__db.001");
+	remove("../scratch/__db.002");
+	remove("../scratch/__db.003");
+	
+	// std::cout << "Deleted DB: " << dataFile << std::endl;
 }
 
 bool Berkley::put(char *myKey, char *myData)
 {
 		
-	flush(myKey, myData);
+	flush();
 		
 	key.data = myKey; 
 	key.size = (1+strlen(myKey))*sizeof(char);
@@ -64,7 +70,7 @@ bool Berkley::put(char *myKey, char *myData)
 
 bool Berkley::get(char *searchKey)
 {
-	flush(searchKey);
+	flush();
 	// Search to find the student with this ID			 
 	key.data = searchKey; 
 	key.size = (1+strlen(searchKey))*sizeof(char); 
